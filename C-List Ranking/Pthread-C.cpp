@@ -31,7 +31,6 @@ void* Jump_function(void* a){
 	else dist[cur_id] = 0;
 	pthread_barrier_wait(&barr);
 	while(linkedList[cur_id]!=linkedList[linkedList[cur_id]]){
-		printf("%d has father %d pointing to %d with dist = %d\n",cur_id,linkedList[cur_id],linkedList[linkedList[cur_id]],dist[cur_id]+dist[linkedList[cur_id]]);
 		int next = linkedList[cur_id];
 		pthread_mutex_lock(&mutexsum[cur_id]);
 		pthread_mutex_lock(&mutexsum[next]);
