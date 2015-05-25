@@ -64,6 +64,6 @@ int main(){
                 pthread_join(callThd[j], &status);
         }
 	for(int j=1; j <= 16 ; j ++)
-	printf("%d %d\n",j,dist[j]);
+	printf("%d %d\n",j,dist[j]-1);
 
 }	
