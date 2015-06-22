@@ -25,8 +25,6 @@ int B[] = {2,5,18,21,24,29,31,33,
                 66, 70, 73, 80, 88, 89, 114, 124,
                 125, 131, 143, 144, 145, 148, 155, 159};
 int C[40];
-int Rab[8];
-int Rba[32];
 int Ns[NSIZE] = {4096, 8192, 16384, 32768, 65536, 131072, 262144};
 void* Rab_function(void* a){
         tThreadArg *temp ;
@@ -38,7 +36,7 @@ void* Rab_function(void* a){
 		if(num>B[mid]) l = mid+1;
 		else r = mid-1;
 	}
-	Rab[temp->id] = l;
+        C[temp->id+l] = A[temp->id];
         return (void *)0;
 }
 void* Rba_function(void* a){
@@ -51,22 +49,8 @@ void* Rba_function(void* a){
                 if(num>A[mid]) l = mid+1;
                 else r = mid-1;
         }
-        Rba[temp->id] = l;
+        C[temp->id+l] = B[temp->id];
         return (void *)0;
-}
-void* Ca_function(void* a){
-        tThreadArg *temp ;
-        temp = (tThreadArg *)a;
-        int cur_id = temp->id;
-	C[cur_id+Rab[cur_id]] = A[cur_id];
-	return (void *)0;
-}
-void* Cb_function(void* a){
-        tThreadArg *temp ;
-        temp = (tThreadArg *)a;
-        int cur_id = temp->id;
-        C[cur_id+Rba[cur_id]] = B[cur_id];
-	return (void *)0;
 }
 int main(){
 	pthread_attr_t attr;
@@ -88,24 +72,6 @@ int main(){
         {
                 x[j].id = j;
                 pthread_create(&callThd[j], &attr, Rba_function, (void *)&x[j]);
-        }
-        for(int j=0; j<=31; j++)
-        {
-                pthread_join(callThd[j], &status);
-        }
-	for( int j=0; j<=7; j++)
-        {
-                x[j].id = j;
-                pthread_create(&callThd[j], &attr, Ca_function,(void *)&x[j]); 
-        }
-        for(int j=0; j<=7; j++)
-        {
-                pthread_join(callThd[j], &status);
-        }
-        for (int j=0; j<=31; j++)
-        {
-                x[j].id = j;
-                pthread_create(&callThd[j], &attr, Cb_function, (void *)&x[j]);
         }
         for(int j=0; j<=31; j++)
         {
